@@ -25,8 +25,4 @@ public class TestController {
         return "500";
     }
 
-    @GetMapping("/403")
-    public String forbidden(){
-        return "403";
-    }
 }
