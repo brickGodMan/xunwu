@@ -1,6 +1,6 @@
-package com.imooc.service.house;
+package com.qcy.service.house;
 
-import com.imooc.ApplicationTests;
+import com.qcy.ApplicationTests;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
 import org.junit.Assert;

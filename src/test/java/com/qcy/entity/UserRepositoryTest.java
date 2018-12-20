@@ -1,8 +1,8 @@
-package com.imooc.entity;
+package com.qcy.entity;
 
-import com.imooc.ApplicationTests;
-import com.imooc.repository.RoleRepository;
-import com.imooc.repository.UserRepository;
+import com.qcy.ApplicationTests;
+import com.qcy.repository.RoleRepository;
+import com.qcy.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
