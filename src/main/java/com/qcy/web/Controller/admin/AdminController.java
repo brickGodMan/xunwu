@@ -125,16 +125,6 @@ public class AdminController {
         }catch (IOException e) {
             return ApiResponse.ofStatus(ApiResponse.Status.INTERNAL_SERVER_ERROR);
         }
-      /*  //测试代码 文件存放到本地
-         String fileName = file.getOriginalFilename();
-        File target = new File("D:/code/soufang/tmp/" + fileName);
-         try {
-                file.transferTo(target);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return ApiResponse.ofStatus(ApiResponse.Status.INTERNAL_SERVER_ERROR);
-            }
-            return ApiResponse.ofSuccess(null);*/
     }
 
     /**
