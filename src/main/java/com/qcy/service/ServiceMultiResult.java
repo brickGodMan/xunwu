@@ -11,15 +11,12 @@ import java.util.List;
  **/
 public class ServiceMultiResult<T> {
     private long total;
+    private List<T> result;
 
     public ServiceMultiResult(long total, List<T> result) {
         this.total = total;
         this.result = result;
     }
-
-    private List<T> result;
-
-
 
     public long getTotal() {
         return total;

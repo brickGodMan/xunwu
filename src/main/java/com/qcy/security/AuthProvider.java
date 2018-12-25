@@ -47,4 +47,9 @@ public class AuthProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return true;
     }
+
+    //密码设置与修改
+    public static void main(String[] args){
+        System.out.println(new AuthProvider().passwordEncoder.encodePassword("admin",2L));
+    }
 }
