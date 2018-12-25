@@ -11,8 +11,17 @@ public class QiNiuPutRet {
     public String key;
     public String hash;
     public String bucket;
+    public String imageUrl;
     public int width;
     public int height;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     @Override
     public String toString() {
@@ -20,6 +29,7 @@ public class QiNiuPutRet {
                 "key='" + key + '\'' +
                 ", hash='" + hash + '\'' +
                 ", bucket='" + bucket + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
                 ", width=" + width +
                 ", height=" + height +
                 '}';

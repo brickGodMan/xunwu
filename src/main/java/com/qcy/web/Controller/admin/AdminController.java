@@ -109,6 +109,7 @@ public class AdminController {
             Response response = qiNiuService.uploadFile(inputStream);
             if(response.isOK()){
                 QiNiuPutRet ret = gson.fromJson(response.bodyString(), QiNiuPutRet.class);
+                ret.setImageUrl(qiNiuService.getImageUrl(ret.key));
                 return ApiResponse.ofSuccess(ret);
             }else{
                 return ApiResponse.ofMessage(response.statusCode,response.getInfo());

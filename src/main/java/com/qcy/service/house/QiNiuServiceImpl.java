@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @ClassName QiNiuServiceImpl
@@ -34,6 +36,9 @@ public class QiNiuServiceImpl implements IQiNiuService, InitializingBean {
 
     @Value("${qiniu.Bucket}")
     private String bucket;
+
+    @Value("${qiniu.domainOfBucket}")
+    private String domainOfBucket;
 
     private StringMap putPolicy;
 
@@ -65,6 +70,16 @@ public class QiNiuServiceImpl implements IQiNiuService, InitializingBean {
             response = bucketManager.delete(bucket, key);
         }
         return response;
+    }
+
+    @Override
+    public String getImageUrl(String key) throws QiniuException, UnsupportedEncodingException {
+        String encodedFileName = URLEncoder.encode(key, "utf-8");
+        String publicUrl = String.format("%s/%s", domainOfBucket, encodedFileName);
+        //1小时，可以自定义链接过期时间
+        long expireInSeconds = 60 * 60;
+        String finalUrl = auth.privateDownloadUrl(publicUrl, expireInSeconds);
+        return finalUrl;
     }
 
     @Override

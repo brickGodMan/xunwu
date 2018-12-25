@@ -5,6 +5,7 @@ import com.qiniu.http.Response;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @ClassName IQiNiuService
@@ -19,4 +20,6 @@ public interface IQiNiuService {
     Response uploadFile(InputStream inputStream) throws QiniuException;
 
     Response delete(String key) throws QiniuException;
+
+    String getImageUrl(String key) throws QiniuException,UnsupportedEncodingException;
 }
