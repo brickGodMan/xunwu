@@ -3,11 +3,14 @@ package com.qcy.service.house;
 import com.qcy.ApplicationTests;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
+import com.qiniu.util.Auth;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @ClassName QiNiuServiceTests
@@ -44,5 +47,21 @@ public class QiNiuServiceTests extends ApplicationTests {
         } catch (QiniuException e) {
             e.printStackTrace();
         }
+    }
+    @Test
+    public void download() throws UnsupportedEncodingException {
+        String fileName = "Fi4PUqDtf6E5QN63s-EPE4qXABS-";
+        String domainOfBucket = "http://pjph51xc5.bkt.clouddn.com";
+        String encodedFileName = URLEncoder.encode(fileName, "utf-8");
+        String publicUrl = String.format("%s/%s", domainOfBucket, encodedFileName);
+
+        String accessKey = "5odIaQzhNvXtPyuxpBfImbaRUGxdqJepp5q0bqhm";
+        String secretKey = "WoEJtNmG10w3-MNx18jYZ9yROVHss-269xCw8s_v";
+        Auth auth = Auth.create(accessKey, secretKey);
+        long expireInSeconds = 3600;//1小时，可以自定义链接过期时间
+        String finalUrl = auth.privateDownloadUrl(publicUrl, expireInSeconds);
+
+        System.out.println(finalUrl);
+
     }
 }

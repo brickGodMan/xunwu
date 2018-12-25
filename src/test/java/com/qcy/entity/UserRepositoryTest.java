@@ -6,6 +6,9 @@ import com.qcy.repository.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -23,10 +26,17 @@ public class UserRepositoryTest extends ApplicationTests {
     @Autowired
     private RoleRepository roleRepository;
 
+    private final Md5PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
+
     @Test
     public void testFindOne() {
-        User user = userRepository.findOne(1L);
-        Assert.assertEquals("waliwali", user.getName());
+        User user = userRepository.findOne(2L);
+        if (this.passwordEncoder.isPasswordValid(user.getPassword(), "admin", user.getId())) {
+            Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            System.out.println(authentication.getDetails());
+        }
+
+//        Assert.assertEquals("waliwali", user.getName());
     }
 
     @Test
