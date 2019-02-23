@@ -1,4 +1,4 @@
-package com.qcy.web.Controller.user;
+package com.qcy.web.controller.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.qcy.web.Controller.house;
+package com.qcy.web.controller.house;
 
 import com.qcy.base.ApiResponse;
 import com.qcy.service.ServiceMultiResult;

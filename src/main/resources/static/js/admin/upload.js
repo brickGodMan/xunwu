@@ -1,3 +1,5 @@
+var showImgUrl = "";
+
 (function ($) {
     // 当domReady的时候开始初始化
     $(function () {
@@ -539,7 +541,6 @@
             var photo_path = response.data.key,
                 photo_width = response.data.width,
                 photo_height = response.data.height,
-                photo_url = response.data.imageUrl,
                 $photo_container = $('.upload-photo-ids-container');
             $photo_container.off().append('<input type="hidden" name="photos[' + photo_sequence + '].path" value="' +
                 photo_path + '" />').append('<input type="hidden" name="photos[' + photo_sequence + '].width" value="' +
@@ -549,7 +550,7 @@
             $("#upload-cover-container").append(
                 '<div style="float: left; margin: 2px; padding: 2px; border: 1px dashed; width:' +
                 ' 120px; height: 100px;">' +
-                '<span><img src="' + photo_url + '" title="待选封面" style="height: 100px;width: 120px"/>' +
+                '<span><img src= "http://192.168.132.131:7500/v1/tfs/'+photo_path+'" title="待选封面" style="height: 100px;width: 120px"/>' +
                 '<input style="margin-left: 5px;" type="radio" name="cover" value="' +
                 photo_path + '"/></span></div>'
             );

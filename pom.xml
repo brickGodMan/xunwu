@@ -192,6 +192,32 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.taobao.tfs.client</groupId>
+			<artifactId>tfs-client</artifactId>
+			<version>2.1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>8.1.15.v20140411</version>
+		</dependency>
+		<dependency>
+			<groupId>com.taobao</groupId>
+			<artifactId>taobao-sdk-java</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.mina</groupId>
+			<artifactId>mina-core</artifactId>
+			<version>1.1.7</version>
+		</dependency>
+
 	</dependencies>
 
 	<!-- 打包上线 -->
@@ -201,7 +227,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.imooc.Application</mainClass>
+					<mainClass>com.qcy.Application</mainClass>
 					<executable>true</executable>
 				</configuration>
 			</plugin>
@@ -235,8 +261,8 @@
 								<rule>
 									<element>CLASS</element>
 									<includes>
-										<include>com.imooc.service.*.*</include>
-										<include>com.imooc.repository.*</include>
+										<include>com.qcy.service.*.*</include>
+										<include>com.qcy.repository.*</include>
 									</includes>
 									<limits>
 										<limit>

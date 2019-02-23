@@ -52,11 +52,8 @@ public class HouseServiceImpl implements IHouseService {
     @Autowired
     private HouseSubscribeRespository subscribeRespository;
 
-    @Autowired
-    private IQiNiuService qiNiuService;
 
-
-    @Value("${qiniu.cdn.prefix}")
+    @Value("${tfs.req.url}")
     private String cdnPrefix;
 
     @Override

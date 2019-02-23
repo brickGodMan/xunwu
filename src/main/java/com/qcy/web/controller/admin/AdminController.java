@@ -1,31 +1,33 @@
-package com.qcy.web.Controller.admin;
+package com.qcy.web.controller.admin;
 
-import com.google.gson.Gson;
 import com.qcy.base.ApiResponse;
 import com.qcy.entity.SupportAddress;
 import com.qcy.service.ServiceResult;
 import com.qcy.service.house.IAddressService;
 import com.qcy.service.house.IHouseService;
-import com.qcy.service.house.IQiNiuService;
+import com.qcy.utils.TFSClient;
 import com.qcy.web.dto.HouseDTO;
-import com.qcy.web.dto.QiNiuPutRet;
 import com.qcy.web.dto.SupportAddressDTO;
 import com.qcy.web.form.HouseForm;
-import com.qiniu.common.QiniuException;
-import com.qiniu.http.Response;
+import com.taobao.common.tfs.TfsManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import redis.clients.jedis.JedisCluster;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
-
 /**
  * @ClassName AdminController
  * @Description TODO
@@ -36,11 +38,7 @@ import java.util.Map;
 @Controller
 public class AdminController {
 
-    @Autowired
-    private IQiNiuService qiNiuService;
-
-    @Autowired
-    private Gson gson;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     private IHouseService houseService;
@@ -48,6 +46,14 @@ public class AdminController {
     @Autowired
     private IAddressService addressService;
 
+    @Autowired
+    private JedisCluster jedisCluster;
+
+    @Autowired
+    private TfsManager tfsManager;
+
+    @Value("${spring.http.multipart.location}")
+    private String fileDir;
     /**
      * 后台管理中心
      * @return
@@ -101,30 +107,34 @@ public class AdminController {
     @PostMapping(value = "admin/upload/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     public ApiResponse uploadPhoto(@RequestParam("file") MultipartFile file) {
-        if(file.isEmpty()){
-            return ApiResponse.ofStatus(ApiResponse.Status.NOT_VALID_PARAM);
-        }
+        //文件存放到本地
+        String fileName = file.getOriginalFilename();
+        Map<String,String> resultMap = new HashMap<>(3);
         try {
-            InputStream inputStream = file.getInputStream();
-            Response response = qiNiuService.uploadFile(inputStream);
-            if(response.isOK()){
-                QiNiuPutRet ret = gson.fromJson(response.bodyString(), QiNiuPutRet.class);
-                ret.setImageUrl(qiNiuService.getImageUrl(ret.key));
-                return ApiResponse.ofSuccess(ret);
+            String tfsName = TFSClient.uploadFile(file.getInputStream(),fileName.substring(fileName.indexOf(".")),null,tfsManager);
+            resultMap.put("key",tfsName);
+            // 通过MultipartFile得到InputStream，从而得到BufferedImage
+            BufferedImage bufferedImage =ImageIO.read(file.getInputStream());
+            if (bufferedImage == null) {
+                // 证明上传的文件不是图片，获取图片流失败，不进行下面的操作
+                resultMap.put("width","120");
+                resultMap.put("height","100");
             }else{
-                return ApiResponse.ofMessage(response.statusCode,response.getInfo());
+                // 通过图片流获取图片宽度
+                Integer width = bufferedImage.getWidth();
+                // 通过图片流获取图片高度
+                Integer height = bufferedImage.getHeight();
+                resultMap.put("width", String.valueOf(width));
+                resultMap.put("height", String.valueOf(height));
             }
-        }catch (QiniuException e){
-            Response response = e.response;
-            try {
-                return ApiResponse.ofMessage(response.statusCode, response.bodyString());
-            } catch (QiniuException e1) {
-                e1.printStackTrace();
-                return ApiResponse.ofStatus(ApiResponse.Status.INTERNAL_SERVER_ERROR);
-            }
-        }catch (IOException e) {
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
+            return ApiResponse.ofStatus(ApiResponse.Status.INTERNAL_SERVER_ERROR);
+        }catch (Exception e){
+            LOGGER.error(e.getMessage());
             return ApiResponse.ofStatus(ApiResponse.Status.INTERNAL_SERVER_ERROR);
         }
+        return ApiResponse.ofSuccess(resultMap);
     }
 
     /**
@@ -145,7 +155,8 @@ public class AdminController {
         }
 
         Map<SupportAddress.Level, SupportAddressDTO> addressMap = addressService.findCityAndRegion(houseForm.getCityEnName(), houseForm.getRegionEnName());
-        if (addressMap.keySet().size() != 2) {
+        int size = 2;
+        if (addressMap.keySet().size() != size) {
             return ApiResponse.ofStatus(ApiResponse.Status.NOT_VALID_PARAM);
         }
 

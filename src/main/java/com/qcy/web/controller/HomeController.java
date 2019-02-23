@@ -1,4 +1,4 @@
-package com.qcy.web.Controller;
+package com.qcy.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
